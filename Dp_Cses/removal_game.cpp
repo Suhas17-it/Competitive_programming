@@ -1,24 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-int maxSum = 0;
-
-long long solve(vector<int>& a,int i,int j,vector<vector<long long>>& dp){
-
-    if(i > j){
-        return 0;
-    }
-
-
-    if(dp[i][j] != -1){
-        return dp[i][j];
-    }
-
-    long long l = a[i] + min(solve(a,i+2,j,dp),solve(a,i+1,j-1,dp));
-    long long r = a[j] + min(solve(a,i,j-2,dp),solve(a,i+1,j-1,dp));
-
-
-    return dp[i][j] = max(l,r);
-}
 int main(){
 
     int n;
@@ -34,11 +15,22 @@ int main(){
     
     vector<vector<long long>> dp(n,vector<long long>(n,-1));
 
-    long long ans = solve(a,0,n-1,dp);
+    for(int i = 0 ; i < n ; i ++){
+        dp[i][i] = a[i];
+    }
+    for(int len = 2 ; len <= n ; len ++){
+
+        for(int l = 0 ; l + len - 1 < n ; l ++){
+
+            int r = l + len - 1;
+
+            dp[l][r] = max(a[l] - dp[l + 1][r],a[r] - dp[l][r - 1]); 
+        }
+    }
 
 
-    cout << ans << endl;
-
+    
+    cout << (total + dp[0][n - 1]) / 2 << endl;
 
 
 
